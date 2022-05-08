@@ -38,7 +38,7 @@ services:
       DB_PORT: 5432
       DB_USERNAME: postgres
       DB_PASSWORD: 123
-      CLIENT_ID: 281786553330-s13bbtm3iol7abkpd2alk55ukuj2td0d.apps.googleusercontent.com
-      CLIENT_SECRET: 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
+      CLIENT_ID: $CLIENT_ID
+      CLIENT_SECRET: $CLIENT_SECRET
       VIRTUAL_PORT: 8080
 
