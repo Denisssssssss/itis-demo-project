@@ -1,0 +1,51 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'org.springframework.boot' version '2.6.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+java {
+    version '14'
+}
+
+group = 'com.technokratos'
+version = '0.0.1-SNAPSHOT'
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+    apply plugin: 'java'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+bootJar {
+    mainClass = 'com.technokratos.minimyini.MinimyiniApplication'
+}
+
+apply from: 'docker/docker.gradle'
+
+def findPropertyOrEnv(String name) {
+    project.findProperty(name) ?: System.getenv(name)
+}
+
+bootJar.archiveFileName = "${project.name}.jar"
+
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+dependencies {
+    implementation project(':minimyini-impl')
+    implementation project(':minimyini-api')
+    implementation project(':minimyini-db')
+}

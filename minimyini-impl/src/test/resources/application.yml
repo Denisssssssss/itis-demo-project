@@ -1,0 +1,30 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: $CLIENT_ID
+            client-secret: $CLIENT_SECRET
+            redirect-url: http://localhost:8080/login/oauth2/code/google
+            code-exchange-url: https://accounts.google.com/o/oauth2/token
+            grant-type: authorization_code
+            scope:
+              - email
+              - profile
+
+  datasource:
+    url: jdbc:tc:postgresql:9.6.8:///minimyini_db
+    username: postgres
+    password: 123
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yml
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+security:
+  jwt:
+    secret: secret
+    expire-time: 9999999

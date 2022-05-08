@@ -1,0 +1,7 @@
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.liquibase:liquibase-core:4.7.1'
+}

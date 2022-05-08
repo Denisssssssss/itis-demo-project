@@ -1,0 +1,49 @@
+stages:
+  - build
+  - publish
+  - deploy
+  - analysis
+
+build:
+  stage: build
+  artifacts:
+    paths:
+      - "build/libs/*.jar"
+  script:
+    - ./gradlew assemble
+  tags:
+    - shell
+  only:
+    - merge_requests
+    - develop
+    - main
+
+publish:
+  stage: publish
+  variables:
+    DOCKER_REGISTRY_URL: $CI_REGISTRY
+    DOCKER_REGISTRY_USERNAME: gitlab-ci-token
+    DOCKER_REGISTRY_PASSWORD: $CI_BUILD_TOKEN
+  script:
+    - ./gradlew pushImage
+  tags:
+    - shell
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  tags:
+    - shell
+  variables:
+    DOCKER_HOST: $STAGING_HOST
+    COMPOSE_FILE: docker/docker-compose.yml
+    DOCKER_TLS_VERIFY: 1
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - export COMPOSE="docker-compose -f ${COMPOSE_FILE}"
+    - $COMPOSE pull
+    - $COMPOSE down
+    - $COMPOSE up -d
+  only:
+    - main

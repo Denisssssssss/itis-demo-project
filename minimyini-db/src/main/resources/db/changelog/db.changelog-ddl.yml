@@ -1,0 +1,229 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Denis
+      changes:
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)
+              - column:
+                  name: username
+                  type: varchar(255)
+              - column:
+                  name: hash_password
+                  type: varchar(255)
+
+  - changeSet:
+      id: 2
+      author: Denis
+      changes:
+        - createTable:
+            tableName: address
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: postcode
+                  type: varchar(255)
+              - column:
+                  name: region
+                  type: varchar(255)
+              - column:
+                  name: city
+                  type: varchar(255)
+              - column:
+                  name: street
+                  type: varchar(255)
+              - column:
+                  name: building_number
+                  type: varchar(255)
+  - changeSet:
+      id: 3
+      author: Denis
+      changes:
+        - createTable:
+            tableName: hotel
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: check_in
+                  type: time
+              - column:
+                  name: departure
+                  type: time
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: phone_number
+                  type: varchar(255)
+              - column:
+                  name: owner_id
+                  type: bigint
+                  constraints:
+                    foreignKey: true
+                    foreignKeyName: fk_hotel_owner
+                    references: account(id)
+              - column:
+                  name: address_id
+                  type: bigint
+                  constraints:
+                    foreignKey: true
+                    foreignKeyName: fk_hotel_address
+                    references: address(id)
+  - changeSet:
+      id: 4
+      author: Denis
+      changes:
+        - createTable:
+            tableName: apartment
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: rooms_number
+                  type: bigint
+              - column:
+                  name: bedrooms_number
+                  type: bigint
+              - column:
+                  name: number
+                  type: bigint
+              - column:
+                  name: is_locked
+                  type: boolean
+              - column:
+                  name: hotel_id
+                  type: bigint
+                  constraints:
+                    foreignKey: true
+                    foreignKeyName: fk_apartment_hotel
+                    references: hotel(id)
+  - changeSet:
+      id: 5
+      author: Denis
+      changes:
+        - createTable:
+            tableName: booking
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: check_in
+                  type: timestamp
+              - column:
+                  name: departure
+                  type: timestamp
+              - column:
+                  name: code
+                  type: varchar(255)
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    foreignKey: true
+                    foreignKeyName: fk_booking_account
+                    references: account(id)
+              - column:
+                  name: apartment_id
+                  type: bigint
+                  constraints:
+                    foreignKey: true
+                    foreignKeyName: fk_booking_apartment
+                    references: apartment(id)
+  - changeSet:
+      id: 6
+      author: Denis
+      changes:
+        - createTable:
+            tableName: facility
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: price
+                  type: bigint
+  - changeSet:
+      id: 7
+      author: Denis
+      changes:
+        - createTable:
+            tableName: apartment_facility
+            columns:
+              - column:
+                  name: apartment_id
+                  type: bigint
+                  constraints:
+                    foreignKey: true
+                    foreignKeyName: fk_facilities_apartment
+                    references: apartment(id)
+              - column:
+                  name: facility_id
+                  type: bigint
+                  constraints:
+                    foreignKey: true
+                    foreignKeyName: fk_facilities_addon
+                    references: facility(id)

@@ -1,0 +1,5 @@
+rootProject.name = 'minimyini'
+
+include 'minimyini-db'
+include 'minimyini-impl'
+include 'minimyini-api'

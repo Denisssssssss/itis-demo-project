@@ -1,0 +1,47 @@
+import com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:6.6.1'
+    }
+}
+
+apply plugin: DockerRemoteApiPlugin
+
+docker {
+    registryCredentials {
+        url = findPropertyOrEnv("DOCKER_REGISTRY_URL")
+        username = findPropertyOrEnv("DOCKER_REGISTRY_USERNAME")
+        password = findPropertyOrEnv("DOCKER_REGISTRY_PASSWORD")
+    }
+}
+
+ext {
+    dockerImageName = "docker.technokratos.com/java/trainee/trainee-small-myini/$project.name"
+    dockerImageTag = "$project.version"
+}
+
+task copyDockerfile(type: Copy) {
+    from "${projectDir}/docker/Dockerfile"
+    into "${buildDir}/image/"
+
+    from "${projectDir}/build/libs/"
+    into "${buildDir}/image/"
+}
+
+task buildImage(type: DockerBuildImage) {
+    dependsOn copyDockerfile
+    inputDir = file("$buildDir/image")
+    images.add("${dockerImageName}")
+    images.add("${dockerImageName}:${dockerImageTag}")
+}
+
+task pushImage(type: DockerPushImage) {
+    dependsOn buildImage
+    images.add("${dockerImageName}:${dockerImageTag}")
+}
