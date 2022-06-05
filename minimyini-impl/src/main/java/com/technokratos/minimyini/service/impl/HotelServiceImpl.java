@@ -14,6 +14,9 @@ import com.technokratos.minimyini.util.HotelMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class HotelServiceImpl implements HotelService {
@@ -39,5 +42,10 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public Hotel findById(Long id) {
         return hotelRepository.findById(id).orElseThrow(HotelNotFoundException::new);
+    }
+
+    @Override
+    public List<HotelDto> findAll() {
+        return hotelRepository.findAll().stream().map(hotelMapper::toDto).collect(Collectors.toList());
     }
 }

@@ -12,4 +12,6 @@ public interface UserService {
     Optional<User> findByUsername(String username);
 
     User findById(Long userId);
+
+    void updateAuth(String username);
 }

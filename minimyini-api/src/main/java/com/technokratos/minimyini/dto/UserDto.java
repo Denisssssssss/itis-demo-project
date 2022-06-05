@@ -19,4 +19,6 @@ public class UserDto {
     private String firstName;
     @ApiModelProperty(required = false)
     private String lastName;
+
+    private Long telegramId;
 }

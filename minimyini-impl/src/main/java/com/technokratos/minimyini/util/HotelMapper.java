@@ -9,4 +9,6 @@ import org.mapstruct.ReportingPolicy;
 public interface HotelMapper {
 
     Hotel toEntity(HotelDto hotelDto);
+
+    HotelDto toDto(Hotel hotel);
 }

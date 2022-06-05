@@ -41,7 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public TokenDto googleSignIn(String email, String firstName, String lastName) {
         User user = userService.findByUsername(email)
-                .orElseGet(() -> userService.save(new UserDto(email, UUID.randomUUID().toString(), firstName, lastName)));
+                .orElseGet(() -> userService.save(new UserDto(email, UUID.randomUUID().toString(), firstName, lastName, null)));
         return new TokenDto(tokenProvider.generate(user.getId()));
     }
 }

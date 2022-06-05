@@ -28,6 +28,9 @@ databaseChangeLog:
               - column:
                   name: hash_password
                   type: varchar(255)
+              - column:
+                  name: last_auth
+                  type: timestamp
 
   - changeSet:
       id: 2

@@ -1,5 +1,6 @@
 package com.technokratos.minimyini.security.config;
 
+import com.technokratos.minimyini.security.filter.TelegramAuthenticationFilter;
 import com.technokratos.minimyini.security.filter.TokenAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final TokenAuthenticationFilter tokenAuthenticationFilter;
+    private final TelegramAuthenticationFilter telegramAuthenticationFilter;
 
     @Value("${spring.security.oauth2.client.registration.google.redirect-url}")
     private String redirectUrl;
@@ -23,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http
-                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(telegramAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/signIn").permitAll()
                 .antMatchers("/signUp").permitAll()
