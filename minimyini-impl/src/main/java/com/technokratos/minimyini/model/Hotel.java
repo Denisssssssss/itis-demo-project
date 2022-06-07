@@ -1,8 +1,16 @@
 package com.technokratos.minimyini.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -20,6 +28,13 @@ public class Hotel extends BaseEntity {
     private String email;
     private String phoneNumber;
 
+    private Long cheapest;
+
+    private Long mostExpensive;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Photo> photos;
+
     @ManyToOne
     private User owner;
 
@@ -28,4 +43,7 @@ public class Hotel extends BaseEntity {
 
     @OneToMany(mappedBy = "hotel")
     private List<Apartment> apartments;
+
+    @OneToMany(mappedBy = "hotel")
+    private List<Review> reviews;
 }

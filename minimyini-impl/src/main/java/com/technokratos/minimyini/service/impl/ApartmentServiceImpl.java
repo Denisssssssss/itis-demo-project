@@ -1,6 +1,7 @@
 package com.technokratos.minimyini.service.impl;
 
 import com.technokratos.minimyini.dto.ApartmentDto;
+import com.technokratos.minimyini.dto.ApartmentsDto;
 import com.technokratos.minimyini.exception.ApartmentCreationException;
 import com.technokratos.minimyini.exception.ApartmentExistsException;
 import com.technokratos.minimyini.exception.ApartmentModificationException;
@@ -15,6 +16,7 @@ import com.technokratos.minimyini.util.ApartmentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,14 +34,22 @@ public class ApartmentServiceImpl implements ApartmentService {
         if (!hotel.getOwner().getId().equals(ownerId)) {
             throw new ApartmentCreationException("Only owner can add apartments");
         }
+        if (hotel.getCheapest() > apartmentDto.getPrice()) {
+            hotel.setCheapest(apartmentDto.getPrice());
+        }
+        if (hotel.getMostExpensive() < apartmentDto.getPrice()) {
+            hotel.setMostExpensive(apartmentDto.getPrice());
+        }
         apartmentRepository.findByNumberAndHotel(apartmentDto.getNumber(), hotel)
                 .ifPresent(x -> {
                     throw new ApartmentExistsException();
                 });
         Apartment apartment = apartmentMapper.toEntity(apartmentDto);
-        apartment.setFacilities(apartmentDto.getAddonIdList().stream()
-                .map(facilityService::findById)
-                .collect(Collectors.toList()));
+        if (apartmentDto.getAddonIdList() != null) {
+            apartment.setFacilities(apartmentDto.getAddonIdList().stream()
+                    .map(facilityService::findById)
+                    .collect(Collectors.toList()));
+        }
         apartment.setHotel(hotelService.findById(hotelId));
 
         return apartmentRepository.save(apartment);
@@ -51,6 +61,13 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
+    public ApartmentsDto getApartments(Long id) {
+        return ApartmentsDto.builder()
+                .values(apartmentMapper.toDtos(apartmentRepository.findAllByHotelId(id)))
+                .build();
+    }
+
+    @Override
     public void closeForMaintenance(Long apartmentId, Long userId) {
         if (!findById(apartmentId).getHotel().getOwner().getId().equals(userId)) {
             throw new ApartmentModificationException("Only owner can modify apartments");
@@ -58,5 +75,15 @@ public class ApartmentServiceImpl implements ApartmentService {
         Apartment apartment = apartmentRepository.findById(apartmentId).orElseThrow(ApartmentNotFoundException::new);
         apartment.setIsLocked(true);
         apartmentRepository.save(apartment);
+    }
+
+    @Override
+    public List<ApartmentDto> getAllByHotelId(Long hotelId) {
+        return apartmentMapper.toDtos(apartmentRepository.findAllByHotelId(hotelId));
+    }
+
+    @Override
+    public List<ApartmentDto> getAll() {
+        return apartmentMapper.toDtos(apartmentRepository.findAll());
     }
 }

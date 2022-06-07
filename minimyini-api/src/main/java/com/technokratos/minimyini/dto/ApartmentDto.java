@@ -3,15 +3,16 @@ package com.technokratos.minimyini.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
+@Data
 @AllArgsConstructor
 @ApiModel(value = "Apartment info dto")
-public class ApartmentDto {
+public class ApartmentDto implements Comparable<ApartmentDto>{
 
+    private final Long id;
     @ApiModelProperty(required = true)
     private final Long number;
     @ApiModelProperty(required = true)
@@ -22,4 +23,11 @@ public class ApartmentDto {
     private final Long bedroomsNumber;
     @ApiModelProperty(required = true)
     private final List<Long> addonIdList;
+
+    private final Long price;
+
+    @Override
+    public int compareTo(ApartmentDto o) {
+        return Long.compare(this.getPrice(), o.getPrice());
+    }
 }

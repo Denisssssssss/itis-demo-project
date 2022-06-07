@@ -10,6 +10,7 @@ import lombok.Getter;
 @ApiModel(value = "Address info dto")
 public class AddressDto {
 
+    private final Long id;
     @ApiModelProperty(required = true)
     private final String postcode;
     @ApiModelProperty(required = true)

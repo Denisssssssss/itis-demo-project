@@ -1,8 +1,18 @@
 package com.technokratos.minimyini.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.util.List;
 
 @Data
@@ -17,6 +27,10 @@ public class Apartment extends BaseEntity {
     private Integer roomsNumber;
     private Integer bedroomsNumber;
     private Boolean isLocked;
+    private Long price;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Photo> photos;
 
     @ManyToMany
     @JoinTable(
@@ -26,7 +40,7 @@ public class Apartment extends BaseEntity {
     )
     private List<Facility> facilities;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Hotel hotel;
 
     @OneToMany(mappedBy = "apartment")
